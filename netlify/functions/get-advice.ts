@@ -1,14 +1,6 @@
 import { Handler, HandlerEvent } from "@netlify/functions";
 import { GoogleGenAI } from "@google/genai";
-import { FormState, EmissionResults, User, HeatingType } from '../../types';
-
-const { API_KEY } = process.env;
-
-if (!API_KEY) {
-    throw new Error("The API_KEY environment variable is not set.");
-}
-
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+import { FormState, EmissionResults, User, HeatingType } from '../../types.js';
 
 const getHeatingUnit = (heatingType: HeatingType): string => {
     switch (heatingType) {
@@ -28,6 +20,16 @@ const handler: Handler = async (event: HandlerEvent) => {
     if (event.httpMethod !== 'POST') {
         return { statusCode: 405, body: JSON.stringify({ error: 'Method Not Allowed' }) };
     }
+
+    const apiKey = process.env.API_KEY;
+    if (!apiKey) {
+        console.error("API_KEY environment variable is not set in Netlify.");
+        return { 
+            statusCode: 500, 
+            body: JSON.stringify({ error: "Server configuration error: API key not found." }) 
+        };
+    }
+    const ai = new GoogleGenAI({ apiKey });
 
     try {
         const { formData, results, user } = JSON.parse(event.body || '{}') as {
