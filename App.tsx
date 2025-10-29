@@ -6,7 +6,7 @@ import Header from './components/Header';
 import InputSection from './components/InputSection';
 import ResultsSection from './components/ResultsSection';
 import LandingPage from './components/LandingPage';
-import { Leaf, Bolt, Car, UtensilsCrossed, ShoppingCart, Trash2, Sprout, Flame } from 'lucide-react';
+import { Bolt, Car, UtensilsCrossed, ShoppingCart, Trash2, Sprout, Flame } from 'lucide-react';
 
 const App: React.FC = () => {
     const [user, setUser] = useState<User | null>(null);

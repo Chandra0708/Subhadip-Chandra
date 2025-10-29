@@ -122,7 +122,7 @@ const ResultsSection: React.FC<ResultsSectionProps> = ({ results, advice, isLoad
                             <ResponsiveContainer>
                                 <PieChart>
                                     <Pie
-                                        data={results.breakdown}
+                                        data={results.breakdown as any}
                                         cx="50%"
                                         cy="50%"
                                         labelLine={false}
@@ -131,7 +131,7 @@ const ResultsSection: React.FC<ResultsSectionProps> = ({ results, advice, isLoad
                                         dataKey="value"
                                         nameKey="name"
                                     >
-                                        {results.breakdown.map((entry, index) => (
+                                        {results.breakdown.map((_entry, index) => (
                                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                         ))}
                                     </Pie>
