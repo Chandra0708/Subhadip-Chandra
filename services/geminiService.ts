@@ -2,7 +2,7 @@ import { FormState, EmissionResults, User } from '../types';
 
 export const getPersonalizedAdvice = async (formData: FormState, results: EmissionResults, user: User): Promise<string> => {
     try {
-        const response = await fetch('/.netlify/functions/get-advice', {
+        const response = await fetch('/api/get-advice', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
