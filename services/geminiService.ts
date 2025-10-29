@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { FormState, EmissionResults, HeatingType, User } from '../types';
 
-// FIX: Initialize GoogleGenAI directly with process.env.API_KEY as per guidelines.
+// Fix: Use process.env.API_KEY as per the coding guidelines for API key management, which resolves the TypeScript error.
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const getHeatingUnit = (heatingType: HeatingType): string => {
