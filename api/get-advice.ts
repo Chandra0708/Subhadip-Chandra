@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { GoogleGenAI } from "@google/genai";
-import { FormState, EmissionResults, User, HeatingType } from '../types.js';
+import { FormState, EmissionResults, User, HeatingType } from '../types';
 
 const getHeatingUnit = (heatingType: HeatingType): string => {
     switch (heatingType) {

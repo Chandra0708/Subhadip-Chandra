@@ -14,9 +14,24 @@ const LandingPage: React.FC<LandingPageProps> = ({ onStart }) => {
 
     useEffect(() => {
         try {
-            const savedHistory = localStorage.getItem('carbonTrackerHistory');
-            if (savedHistory) {
-                setHistory(JSON.parse(savedHistory));
+            const savedHistoryRaw = localStorage.getItem('carbonTrackerHistory');
+            if (savedHistoryRaw) {
+                const savedHistory = JSON.parse(savedHistoryRaw);
+                // Add validation to filter out malformed entries from older versions
+                if (Array.isArray(savedHistory)) {
+                    const validHistory = savedHistory.filter(item => 
+                        item && typeof item === 'object' && 
+                        item.id && 
+                        item.user && typeof item.user.name === 'string' &&
+                        item.results && typeof item.results.totalAnnual === 'number' &&
+                        item.timestamp
+                    );
+                    setHistory(validHistory);
+                    // Optional: update localStorage with cleaned data if any invalid entries were found
+                    if (validHistory.length !== savedHistory.length) {
+                        localStorage.setItem('carbonTrackerHistory', JSON.stringify(validHistory));
+                    }
+                }
             }
         } catch (e) {
             console.error("Failed to parse history from localStorage", e);
