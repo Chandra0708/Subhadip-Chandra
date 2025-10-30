@@ -31,8 +31,12 @@ export const EMISSION_FACTORS = {
         [VehicleType.MOTORCYCLE]: {
              [FuelType.PETROL]: 0.09
         },
+        [VehicleType.AUTO]: 0.055, // per vehicle-km (avg for CNG)
+        [VehicleType.OLA_UBER]: 0.16, // per vehicle-km (blended average)
+        [VehicleType.TAXI]: 0.17, // per vehicle-km (often diesel)
         [VehicleType.BUS]: 0.03, // per passenger-km
         [VehicleType.TRAIN]: 0.015, // per passenger-km
+        [VehicleType.METRO]: 0.013, // per passenger-km
         [VehicleType.CYCLING]: 0,
         [VehicleType.WALKING]: 0,
     },
@@ -72,10 +76,22 @@ export const TRANSPORT_OPTIONS = {
     [VehicleType.MOTORCYCLE]: {
         fuels: [FuelType.PETROL]
     },
+    [VehicleType.AUTO]: {
+        fuels: []
+    },
+    [VehicleType.OLA_UBER]: {
+        fuels: []
+    },
+    [VehicleType.TAXI]: {
+        fuels: []
+    },
     [VehicleType.BUS]: {
         fuels: []
     },
     [VehicleType.TRAIN]: {
+        fuels: []
+    },
+    [VehicleType.METRO]: {
         fuels: []
     },
     [VehicleType.CYCLING]: {

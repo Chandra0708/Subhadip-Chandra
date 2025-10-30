@@ -9,8 +9,12 @@ export enum VehicleType {
     CAR = 'Car',
     CARPOOL = 'Carpool',
     MOTORCYCLE = 'Motorcycle',
+    AUTO = 'Auto',
+    OLA_UBER = 'OLA/UBER',
+    TAXI = 'Taxi',
     BUS = 'Bus',
     TRAIN = 'Train',
+    METRO = 'Metro',
     CYCLING = 'Cycling',
     WALKING = 'Walking',
 }
@@ -66,4 +70,13 @@ export interface EmissionResults {
     totalMonthly: number;
     totalAnnual: number;
     treesToPlant: number;
+}
+
+export interface Session {
+    id: string;
+    user: User;
+    formData: FormState;
+    results: EmissionResults;
+    advice: string;
+    timestamp: string;
 }

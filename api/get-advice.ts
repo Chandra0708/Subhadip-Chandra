@@ -99,7 +99,7 @@ export default async function handler(
         `;
         
         const genAIResponse = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: 'gemini-2.5-pro',
             contents: prompt,
         });
 

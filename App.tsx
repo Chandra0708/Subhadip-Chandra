@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { FormState, EmissionResults, VehicleType, FuelType, HeatingType, User } from './types';
+import { FormState, EmissionResults, VehicleType, FuelType, HeatingType, User, Session } from './types';
 import { EMISSION_FACTORS, TRANSPORT_OPTIONS } from './constants';
 import { getPersonalizedAdvice } from './services/geminiService';
 import Header from './components/Header';
@@ -43,8 +43,22 @@ const App: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
 
-    const handleStart = (userDetails: User) => {
-        setUser(userDetails);
+    // Type guard to check if data is a Session
+    const isSession = (data: User | Session): data is Session => {
+        return (data as Session).formData !== undefined;
+    };
+
+    const handleStart = (data: User | Session) => {
+        if (isSession(data)) {
+            // It's a saved session, load all data
+            setUser(data.user);
+            setFormData(data.formData);
+            setResults(data.results);
+            setAdvice(data.advice);
+        } else {
+            // It's a new user
+            setUser(data);
+        }
     };
     
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -144,9 +158,34 @@ const App: React.FC = () => {
             const calculatedResults = calculateEmissions();
             setResults(calculatedResults);
 
+            let aiAdvice = '';
             if (user) {
-                const aiAdvice = await getPersonalizedAdvice(formData, calculatedResults, user);
+                aiAdvice = await getPersonalizedAdvice(formData, calculatedResults, user);
                 setAdvice(aiAdvice);
+
+                // Save to history
+                const newSession: Session = {
+                    id: Date.now().toString(),
+                    user,
+                    formData,
+                    results: calculatedResults,
+                    advice: aiAdvice,
+                    timestamp: new Date().toISOString()
+                };
+
+                try {
+                    const savedHistoryRaw = localStorage.getItem('carbonTrackerHistory');
+                    const savedHistory: Session[] = savedHistoryRaw ? JSON.parse(savedHistoryRaw) : [];
+                    // Prepend new session to the start of the array
+                    const updatedHistory = [newSession, ...savedHistory]; 
+                    // Limit history to 10 entries to prevent localStorage from getting too large
+                    if (updatedHistory.length > 10) {
+                        updatedHistory.pop();
+                    }
+                    localStorage.setItem('carbonTrackerHistory', JSON.stringify(updatedHistory));
+                } catch (e) {
+                    console.error("Failed to save history to localStorage", e);
+                }
             }
 
         } catch (err) {
