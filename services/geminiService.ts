@@ -84,7 +84,11 @@ export const getPersonalizedAdvice = async (formData: FormState, results: Emissi
             contents: prompt,
         });
 
-        return response.text;
+        const advice = response.text;
+        if (!advice) {
+            throw new Error("Received an empty response from the Gemini API.");
+        }
+        return advice;
 
     } catch (error) {
         console.error("Error getting personalized advice from Gemini:", error);
