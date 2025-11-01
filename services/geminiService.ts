@@ -24,7 +24,7 @@ export const getPersonalizedAdvice = async (formData: FormState, results: Emissi
             throw new Error(errorMessage);
         }
 
-        const data = await response.json();
+        const data = await response.json() as { advice?: string };
         
         if (!data.advice) {
             throw new Error("Received an empty 'advice' field from the API.");
