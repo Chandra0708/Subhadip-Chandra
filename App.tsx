@@ -68,14 +68,20 @@ const App: React.FC = () => {
         if (keys.length === 1) {
             setFormData(prev => ({ ...prev, [name]: value }));
         } else {
-            setFormData(prev => ({
-                ...prev,
-                [keys[0]]: {
-                    // @ts-ignore
-                    ...prev[keys[0]],
-                    [keys[1]]: value
-                }
-            }));
+            // FIX: Removed @ts-ignore by adding a type-safe check for nested state updates.
+            // This improves type safety and code clarity.
+            const mainKey = keys[0];
+            const subKey = keys[1];
+
+            if (mainKey === 'heating' || mainKey === 'transport' || mainKey === 'diet' || mainKey === 'spending') {
+                setFormData(prev => ({
+                    ...prev,
+                    [mainKey]: {
+                        ...prev[mainKey],
+                        [subKey]: value
+                    }
+                }));
+            }
         }
     };
 
@@ -104,8 +110,10 @@ const App: React.FC = () => {
             transportEmissions = distance * transportFactorData;
         } else if (transportFactorData && typeof transportFactorData === 'object') {
             const { fuelType } = formData.transport;
-            // @ts-ignore
-            transportEmissions = distance * transportFactorData[fuelType];
+            // FIX: Removed @ts-ignore by using a type assertion.
+            // This ensures that transportFactorData is treated as an object with string keys,
+            // which aligns with the data structure and improves type safety.
+            transportEmissions = distance * (transportFactorData as Record<string, number>)[fuelType];
         }
 
         const dietEmissions = 
